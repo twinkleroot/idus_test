@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Interfaces\Services\CRUDService;
 use App\Models\User;
-use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    private $userService;
+    private $service;
 
-    public function __construct(UserService $userService)
+    public function __construct(CRUDService $service)
     {
-        $this->userService = $userService;    
+        $this->service = $service;    
     }
     /**
      * Display a listing of the resource.
@@ -39,16 +39,14 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  integer $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(int $id)
     {
-        response()->json([
-            'name' => 'ahn jung mo',
-            'nickname' => 'justin',
-            'email' => 'jmahn@lunasoft.co.kr',
-        ]);
+        $user =$this->service->getById($id);
+        dd($user);
+        return response()->json($user->toArray());
     }
 
     /**
