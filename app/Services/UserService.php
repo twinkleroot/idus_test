@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Interfaces\Services\CRUDService;
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class UserService implements CRUDService
 {
@@ -21,9 +21,12 @@ class UserService implements CRUDService
      *
      * @return Collection
      */
-    public function getList() : Collection
+    public function getList(array $searchCondition) : Collection
     {
-        return $this->userRepository->getUsers();
+        return $this->userRepository->getUsers([
+            'name' => $searchCondition['name'] ?? '',
+            'email' => $searchCondition['email'] ?? ''
+        ]);
     }
 
 
@@ -33,7 +36,7 @@ class UserService implements CRUDService
      * @param integer $id
      * @return User
      */
-    public function getById(int $id) : Collection
+    public function getById(int $id) : User
     {
         return $this->userRepository->getUserById($id);
     }
@@ -42,10 +45,10 @@ class UserService implements CRUDService
      * 회원 가입
      *
      * @param User $user
-     * @return User
+     * @return int
      */
-    public function add(User $user) : User
+    public function add(Collection $collection) : bool
     {
-        return User::getLastUser();
+        return $this->userRepository->addUser($collection);
     }
 }

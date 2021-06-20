@@ -17,4 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::apiResource('user', App\Http\Controllers\UserController::class);
+Route::post('login', [App\Http\Controllers\LoginController::class, 'login']);
+Route::post('logout', [App\Http\Controllers\LoginController::class, 'logout']);
+
+Route::get('user/{user}/orders', [App\Http\Controllers\UserController::class, 'showOrders']);
+Route::apiResource('user', App\Http\Controllers\UserController::class)->only([
+    'index', 'show', 'store'
+]);
