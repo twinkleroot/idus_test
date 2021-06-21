@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Interfaces\Services\CRUDService;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -23,6 +24,12 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = $this->service->getList($request->all());
+
+        return response()->json([
+            'code' => 1000,
+            'msg' => 'welcome to join!',
+            'data' => $users->toArray()
+        ]);
     }
 
     /**
@@ -37,6 +44,7 @@ class UserController extends Controller
 
         if($validator->fails()) {
             return response()->json([
+                'code' => 2000,
                 'msg' => 'fail to validate form data.'
                 ,'validatorErrorMsg' => $validator->errors()
             ]);
@@ -45,7 +53,7 @@ class UserController extends Controller
         $joinUserRequest = collect([
             'name' => $request->name,
             'nickname' => $request->nickname,
-            'password' => \Hash::make($request->password),
+            'password' => Hash::make($request->password),
             'email' => $request->email,
             'phone_num' => $request->phone_num,
             'gender' => $request->gender
@@ -53,7 +61,10 @@ class UserController extends Controller
 
         $joinResult = $this->service->add($joinUserRequest);
         if( ! $joinResult) {
-            return response()->json(['msg' => 'fail to join this user.']);
+            return response()->json([
+                'code' => 3000,
+                'msg' => 'fail to join this user.'
+            ]);
         }
 
         return response()->json([
@@ -84,6 +95,7 @@ class UserController extends Controller
         $user = $this->service->getById($id);
 
         return response()->json([
+            'code' => 1000,
             'msg' => 'show detail user. id : '. $id,
             'user' => $user->toArray()
         ]);
@@ -94,6 +106,7 @@ class UserController extends Controller
         $orders = $this->service->getById($id)->orders;
         
         return response()->json([
+            'code' => 1000,
             'msg' => 'show orders of user. id : '. $id,
             'orders' => $orders->toArray()
         ]);

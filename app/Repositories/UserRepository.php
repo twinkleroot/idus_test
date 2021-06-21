@@ -38,6 +38,7 @@ class UserRepository
             $orders = $user->orders->toArray();
             $lastOrder = count($orders) > 0 ? $orders[count($orders) - 1] : [];
             $addLastOrderOfUsers = Arr::add($addLastOrderOfUsers, sprintf('%s|%s', $user->name, $user->nickname), [
+                'id' => $user->id,
                 'name' => $user->name,
                 'nickname' => $user->nickname,
                 'email' => $user->email,
