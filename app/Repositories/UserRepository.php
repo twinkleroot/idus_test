@@ -9,14 +9,14 @@ use Illuminate\Pagination\Paginator;
 
 class UserRepository
 {
-    public static function getUsers($searchCondition) : Collection
+    public static function getUsers(array $searchCondition) : array
     {
         // 조회할 페이지 세팅
-        $currentPage = $searchCondition['page'] ?? 2;
+        $currentPage = $searchCondition['page'] ?? 1;
         Paginator::currentPageResolver(function () use ($currentPage) {
             return $currentPage;
         });
-
+        
         // 검색 조건 연결
         $usersQuery = User::select('id', 'name', 'nickname', 'email', 'gender');
         if(! empty($searchCondition['name'])) {
@@ -27,17 +27,20 @@ class UserRepository
         }
 
         // 쿼리
-        $users = $usersQuery
+        return $usersQuery
             ->orderBy('id', 'desc')
             ->simplePaginate(config('search.contentsPerPage'))
             ->items();
+    }
 
+    public static function setLastOrderOfUsers(array $users) : Collection
+    {
         // 회원의 마지막 주문 포함    
         $addLastOrderOfUsers = [];
         foreach($users as $user) {
             $orders = $user->orders->toArray();
             $lastOrder = count($orders) > 0 ? $orders[count($orders) - 1] : [];
-            $addLastOrderOfUsers = Arr::add($addLastOrderOfUsers, sprintf('%s|%s', $user->name, $user->nickname), [
+            $addLastOrderOfUsers = Arr::add($addLastOrderOfUsers, sprintf('%s_%s', $user->id, $user->name), [
                 'id' => $user->id,
                 'name' => $user->name,
                 'nickname' => $user->nickname,
@@ -49,7 +52,7 @@ class UserRepository
 
         return collect($addLastOrderOfUsers);    
     }
-    
+
     public static function getUserById(int $id) : User
     {
         return User::find($id);

@@ -27,7 +27,7 @@ class UserController extends Controller
 
         return response()->json([
             'code' => 1000,
-            'msg' => 'welcome to join!',
+            'msg' => 'success to get users',
             'data' => $users->toArray()
         ]);
     }

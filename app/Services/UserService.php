@@ -23,10 +23,15 @@ class UserService implements CRUDService
      */
     public function getList(array $searchCondition) : Collection
     {
-        return $this->userRepository->getUsers([
+        // 페이지네이션 + 검색으로 회원 검색
+        $users = $this->userRepository->getUsers([
+            'page' => $searchCondition['page'] ?? '',
             'name' => $searchCondition['name'] ?? '',
             'email' => $searchCondition['email'] ?? ''
         ]);
+
+        // 회원의 마지막 주문까지 포함해서 리턴
+        return $this->userRepository->setLastOrderOfUsers($users);
     }
 
 
