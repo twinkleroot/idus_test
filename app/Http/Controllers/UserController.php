@@ -42,7 +42,7 @@ class UserController extends Base
             $this->result['data'] = $this->service->getUserListAddLastOrder($request->all());
         } catch(Throwable $e) {
             $this->result['code'] = 2000;
-            $this->result['message'] = 'fail to get users';
+            $this->result['message'] = 'fail to get users.';
             
             $logMessage = sprintf('[%s][%s][%s:%d] message : %s', __CLASS__, __FUNCTION__, $e->getFile(), $e->getLine(), $e->getMessage());
             $this->errorLog($logMessage);
@@ -80,9 +80,10 @@ class UserController extends Base
         // 회원 가입
         $userDatas['password'] = Hash::make($request->password);
         try{
-            $joinResult = DB::transaction(function () use($userDatas) {
+            $newUserId = DB::transaction(function () use($userDatas) {
                 return $this->service->add($userDatas);
             });
+            $this->result['newUserId'] = $newUserId;
         } catch(Throwable $e) {
             $this->result['code'] = 2000;
             $this->result['message'] = 'fail to join user.';

@@ -97,7 +97,7 @@ class UserService implements CRUDService
      * @param array $userDatas
      * @return int
      */
-    public function add(array $userDatas) : bool
+    public function add(array $userDatas) : int
     {
         return $this->userRepository->addUser($userDatas);
     }

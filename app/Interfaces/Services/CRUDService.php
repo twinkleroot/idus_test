@@ -9,5 +9,5 @@ interface CRUDService
 {
     public function getList(array $searchCondition) : array;
     public function getById(int $id) : array;
-    public function add(array $collection) : bool;
+    public function add(array $collection) : int;
 }

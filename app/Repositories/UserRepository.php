@@ -51,10 +51,10 @@ class UserRepository
 
     public static function getUserById(int $id) : User
     {
-        return User::find($id);
+        return User::select('id', 'name', 'nickname', 'email', 'gender')->find($id);
     }
 
-    public static function addUser(array $joinUserDatas) : bool
+    public static function addUser(array $joinUserDatas) : int
     {
         $joinUser = collect($joinUserDatas);
 
@@ -65,7 +65,8 @@ class UserRepository
         $newUser->email = $joinUser->get('email');
         $newUser->phone_num = $joinUser->get('phone_num');
         $newUser->gender = $joinUser->get('gender') ?? '';
-
-        return $newUser->save();
+        $newUser->save();
+        
+        return $newUser->id;
     }
 }

@@ -1,63 +1,166 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# API 문서
+## 회원 가입
+### - Request URL
+POST http://api.domain.com/api/user/{id}
+### - REQUEST Body
+```json
+{
+    "name":"안정모",
+    "nickname":"justin",
+    "password":"Password1!",
+    "email":"twinklehs0212@gmail.com",
+    "gender":"male",
+    "phone_num":"01090346256"
+}
+```
+### - Success Response Body
+```json
+{
+    "code": 1000,
+    "message": "success.",
+    "newUserId": 52
+}
+```
+### - Fail Response Body
+```json
+{
+    "code": 2000,
+    "message": "fail to join user.",
+}
+```
+## 단일 회원 상세 정보 조회
+### - Request URL
+GET http://api.domain.com/api/user/{id}
+### - Query Parameters
+None
+### - Success Response Body
+```json
+{
+    "code": 1000,
+    "message": "success.",
+    "user": {
+        "id": 5,
+        "name": "안정모",
+        "nickname": "justin",
+        "phone_num": 01090346256,
+        "email": "twinklehs0212@gmail.com",
+        "gender": "male"
+    }
+}
+```
+### - Fail Response Body
+```json
+{
+    "code": 2000,
+    "message": "fail to get user detail.",
+}
+```
+## 단일 회원의 주문 목록 조회
+### - Request URL
+GET http://api.domain.com/api/user/{id}/orders
+### - Query Parameters
+None
+### - Success Response Body
+```json
+{
+    "code": 1000,
+    "message": "success.",
+    "orders": [
+        {
+            "id": 6,
+            "order_id": "QWERSD123983",
+            "product_name": "포도",
+            "price": 30000,
+            "created_at": "2021-06-22T20:42:52.000000Z",
+            "updated_at": "2021-06-22T20:42:52.000000Z",
+            "user_id": 5
+        },
+        ...
+    ]
+}
+```
+### - Fail Response Body
+```json
+{
+    "code": 2000,
+    "message": "fail to get orders of user.",
+}
+```
+## 여러 회원 목록 조회
+### - Request URL
+GET http://api.domain.com/api/user/
+### - Query Parameters
+- page = 1
+- name = 안정모
+- email = twinklehs0212@gmail.com
+### - Success Response Body
+```json
+{
+    "code": 1000,
+    "message": "success.",
+    "data": {
+        "3_안정모": {
+            "id": 3,
+            "name": "안정모",
+            "nickname": "justin",
+            "email": "twinklehs0212@gmail.com",
+            "gender": "male",
+            "lastOrder": {
+                "id": 5,
+                "order_id": "ABCDEF123456",
+                "product_name": "사과",
+                "price": 10000,
+                "created_at": "2021-06-22T20:42:52.000000Z",
+                "updated_at": "2021-06-22T20:42:52.000000Z",
+                "user_id": 3
+            }
+        },
+        ...
+    }
+}
+```
+### - Fail Response Body
+```json
+{
+    "code": 2000,
+    "message": "fail to get users.",
+}
+```
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# idus_test
+## 회원 로그인
+### - Request URL
+POST http://api.domain.com/api/login
+### - REQUEST Body
+```json
+{
+    "email":"twinklehs0212@gmail.com",
+    "password":"Password1!"
+}
+```
+### - Success Response Body
+```json
+{
+    "code": 1000,
+    "message": "success.",
+}
+```
+### - Fail Response
+- Http Response Code : 401
+- Body 
+```json
+{
+    "code": 2000,
+    "message": "login failed.",
+}
+```
+## 회원 로그아웃
+POST http://api.domain.com/api/logout
+### - REQUEST Body
+None
+### - Success Response Body
+```json
+{
+    "code": 1000,
+    "message": "success.",
+}
+```
