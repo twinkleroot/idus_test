@@ -9,34 +9,30 @@ use Illuminate\Pagination\Paginator;
 
 class UserRepository
 {
-    public static function getUsers(array $searchCondition) : array
+    public static function getUsers(int $page, array $searchCondition) : array
     {
         // 조회할 페이지 세팅
-        $currentPage = $searchCondition['page'] ?? 1;
-        Paginator::currentPageResolver(function () use ($currentPage) {
-            return $currentPage;
+        Paginator::currentPageResolver(function () use ($page) {
+            return $page;
         });
         
-        // 검색 조건 연결
-        $usersQuery = User::select('id', 'name', 'nickname', 'email', 'gender');
-        if(! empty($searchCondition['name'])) {
-            $usersQuery->where('name', $searchCondition['name']);
-        }
-        if(! empty($searchCondition['email'])) {
-            $usersQuery->where('email', $searchCondition['email']);
-        }
-
-        // 쿼리
-        return $usersQuery
+        return User::select('id', 'name', 'nickname', 'email', 'gender')
+            ->where($searchCondition)
             ->orderBy('id', 'desc')
             ->simplePaginate(config('search.contentsPerPage'))
             ->items();
     }
 
-    public static function setLastOrderOfUsers(array $users) : Collection
+    /**
+     * 회원 목록에서 회원의 마지막 주문까지 포함
+     *
+     * @param array $users
+     * @return array
+     */
+    public static function setLastOrderOfUsers(array $users) : array
     {
-        // 회원의 마지막 주문 포함    
         $addLastOrderOfUsers = [];
+
         foreach($users as $user) {
             $orders = $user->orders->toArray();
             $lastOrder = count($orders) > 0 ? $orders[count($orders) - 1] : [];
@@ -50,7 +46,7 @@ class UserRepository
             ]);
         }
 
-        return collect($addLastOrderOfUsers);    
+        return $addLastOrderOfUsers;
     }
 
     public static function getUserById(int $id) : User
@@ -58,13 +54,10 @@ class UserRepository
         return User::find($id);
     }
 
-    public static function getLastUser() : User
+    public static function addUser(array $joinUserDatas) : bool
     {
-        return User::last();
-    }
+        $joinUser = collect($joinUserDatas);
 
-    public static function addUser(Collection $joinUser) : bool
-    {
         $newUser = new User();
         $newUser->name = $joinUser->get('name');
         $newUser->nickname = $joinUser->get('nickname');
@@ -72,8 +65,7 @@ class UserRepository
         $newUser->email = $joinUser->get('email');
         $newUser->phone_num = $joinUser->get('phone_num');
         $newUser->gender = $joinUser->get('gender') ?? '';
-        $result = $newUser->save();
 
-        return $result;
+        return $newUser->save();
     }
 }

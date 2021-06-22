@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', [App\Http\Controllers\LoginController::class, 'login']);
 Route::post('logout', [App\Http\Controllers\LoginController::class, 'logout']);
 
-Route::get('user/{user}/orders', [App\Http\Controllers\UserController::class, 'showOrders']);
+Route::get('user/{user}/orders', [App\Http\Controllers\UserController::class, 'showOrdersOfUser'])->name('user.orders');
 Route::apiResource('user', App\Http\Controllers\UserController::class)->only([
     'index', 'show', 'store'
 ]);
